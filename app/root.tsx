@@ -1,32 +1,61 @@
-import type { MetaFunction } from "@remix-run/node";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
-
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "New Remix App",
-  viewport: "width=device-width,initial-scale=1",
-});
+import { Outlet, LiveReload, Link } from "@remix-run/react";
+import type { LinksFunction } from "@remix-run/node";
+import styles from "~/styles/tailwind.css";
 
 export default function App() {
   return (
+    <Document title="My Remix Blog">
+      <Layout>
+        <Outlet />
+      </Layout>
+    </Document>
+  );
+}
+
+function Document({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title?: string;
+}) {
+  return (
     <html lang="en">
       <head>
-        <Meta />
-        <Links />
+        <title>{title || "Remix Blog"}</title>
+        {/* Need to manual add, using Remix linksFunction not working */}
+        <link rel="stylesheet" href={styles} />
       </head>
       <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+        {children}
+        {process.env.NODE_ENV === "development" ? <LiveReload /> : null}
       </body>
     </html>
   );
 }
+
+function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <nav>
+        <Link to="/" className="text-3xl text-orange-50">
+          Remix
+        </Link>
+
+        <ul className="">
+          <li>
+            <Link to="/dashboard">Dashboard</Link>
+          </li>
+        </ul>
+      </nav>
+
+      <div className="">{children}</div>
+    </>
+  );
+}
+
+// Not working
+export const links: LinksFunction = () => {
+  console.log(styles);
+  return [{ rel: "stylesheet", href: styles }];
+};
