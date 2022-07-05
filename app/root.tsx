@@ -1,5 +1,9 @@
-import { Outlet, LiveReload, Link } from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
+import { Outlet, LiveReload, Link, Links, Meta } from "@remix-run/react";
+import type {
+  LinksFunction,
+  MetaFunction,
+  ErrorBoundaryComponent,
+} from "@remix-run/node";
 import styles from "~/styles/tailwind.css";
 
 export default function App() {
@@ -22,9 +26,11 @@ function Document({
   return (
     <html lang="en">
       <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
         <title>{title || "Remix Blog"}</title>
-        {/* Need to manual add, using Remix linksFunction not working */}
-        <link rel="stylesheet" href={styles} />
+        <Links />
       </head>
       <body>
         {children}
@@ -54,8 +60,25 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Not working
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  console.log(error);
+  return (
+    <Document>
+      <div>Error - {error.message}</div>;
+    </Document>
+  );
+};
+
 export const links: LinksFunction = () => {
-  console.log(styles);
   return [{ rel: "stylesheet", href: styles }];
+};
+
+export const meta: MetaFunction = () => {
+  const description = "A cool app";
+  const keywords = "remix, react, javascript";
+
+  return {
+    description,
+    keywords,
+  };
 };
