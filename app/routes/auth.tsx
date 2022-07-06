@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
 
 import Navbar from "~/components/nav-bar";
@@ -10,7 +10,7 @@ const Auth: React.FC = () => {
   return (
     <>
       <Navbar user={user} />
-      <div></div>
+      <Outlet />
     </>
   );
 };

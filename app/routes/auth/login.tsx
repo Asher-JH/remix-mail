@@ -8,10 +8,12 @@ import { loginValidations } from "~/validations/auth";
 const Login: React.FC = () => {
   const actionData = useActionData();
 
+  console.log(actionData);
+
   return (
     <div>
       Login
-      <form action="POST">
+      <form method="POST">
         <div>
           <label htmlFor="email">Email</label>
           <input type="email" name="email" id="email" />
